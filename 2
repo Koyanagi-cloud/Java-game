@@ -1,0 +1,112 @@
+import java.util.Scanner;
+import java.util.Random;
+
+public class CommandGame {
+    public static void main(String[]args) throws InterruptedException {
+        int playerHp = 100;
+        int enemyHp = 50;
+        boolean escaped = false;
+
+        System.out.println("勇者 HP:" + playerHp);
+        System.out.println("スライム HP:" + enemyHp);
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        // whileの処理
+        while (enemyHp > 0 && playerHp > 0) {
+
+            //コマンドの表示
+            System.out.println("1.たたかう");
+            System.out.println("2.にげる");
+            System.out.println("3.腹踊りをする");
+            System.out.println("コマンドを入力");
+
+            //ターン入力
+            int command = scanner.nextInt();
+
+            // 勇者の処理
+            if (command == 1) {
+                int damage;
+
+                System.out.println("勇者はスライムを攻撃した！");
+                Thread.sleep(2000);
+
+                if (random.nextInt(4) == 0) {
+                    damage = 20;
+                    System.out.println("会心の一撃！");
+                    Thread.sleep(2000);
+
+                } else {
+                    damage = random.nextInt(8,16);
+                }
+
+                enemyHp = Math.max(0, enemyHp - damage);
+
+                System.out.println("スライムに" + damage + "ダメージ！");
+                Thread.sleep(2000);
+                System.out.println("スライム HP:" + enemyHp);
+                Thread.sleep(2000);
+
+            } else if (command == 2) {
+                System.out.println("勇者は逃げ出した！");
+                Thread.sleep(2000);
+
+                if (random.nextInt(2) ==0) {
+                    escaped = true;
+
+                    System.out.println("勇者は逃げ切った！");
+                    Thread.sleep(2000);
+
+                    break;
+                } else {
+                    System.out.println("しかし、逃げられなかった！");
+                    Thread.sleep(2000);
+                }
+
+            } else if (command == 3) {
+                System.out.println("勇者は腹踊りをした！");
+                Thread.sleep(2000);
+
+                if (random.nextInt(5) == 0) {
+                    enemyHp = Math.max(0, enemyHp - 9999);
+
+                    System.out.println("スライムは腹を抱えて笑った！");
+                    Thread.sleep(2000);
+                    System.out.println("スライムに9999ダメージ！");
+                    Thread.sleep(2000);
+                } else {
+                    System.out.println("しかし、何も起こらなかった！");
+                    Thread.sleep(2000);
+                }
+            }
+
+            // スライムの処理
+            if (enemyHp > 0) {
+                int damage = random.nextInt(5,11);
+
+                playerHp = Math.max(0,playerHp - damage);
+
+                System.out.println("スライムの攻撃！");
+                Thread.sleep(2000);
+                System.out.println("勇者に" + damage + "ダメージ！");
+                Thread.sleep(2000);
+                System.out.println("勇者 Hp:" + playerHp);
+                Thread.sleep(2000);
+            }
+
+        }
+        if (escaped) {
+            System.out.println("戦闘を終了した！");
+        } else if (enemyHp <= 0 && playerHp > 0) {
+            System.out.println("スライムを倒した！");
+            Thread.sleep(2000);
+            System.out.println("勝利！");
+        } else if (playerHp <= 0) {
+            System.out.println("勇者は力尽きた...");
+            Thread.sleep(2000);
+            System.out.println("ゲームオーバー！");
+
+        }
+    }
+}
