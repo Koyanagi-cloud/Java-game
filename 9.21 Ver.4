@@ -1,0 +1,297 @@
+import java.util.Scanner;
+import java.util.Random;
+import java.util.ArrayList;
+
+public class CommandGame {
+    public static void main(String[]args) throws InterruptedException {
+        int playerHp = 100;
+        int playerMp = 30;
+        int herbCount = 3;
+        int enemyHp = 50;
+        boolean escaped = false;
+        boolean enhanced = false;
+        boolean defending = false;
+        boolean charged = false;
+        int enhanceTurns = 0;
+
+        System.out.println("勇者 HP:" + playerHp);
+        System.out.println("勇者 MP:" + playerMp);
+        System.out.println("スライム HP:" + enemyHp);
+
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        // whileの処理
+        while (enemyHp > 0 && playerHp > 0 && !escaped) {
+
+            boolean commandSelected = false;
+            while (!commandSelected) {
+
+                //コマンドの表示
+                System.out.println("1.攻撃");
+                System.out.println("2.にげる");
+                System.out.println("3.魔法");
+                System.out.println("4.腹踊りをする");
+                System.out.println("5.防御");
+                System.out.println("6．アイテム");
+                System.out.println("コマンドを入力");
+
+
+                //ターン入力
+                int command = scanner.nextInt();
+
+
+                // 勇者の処理
+                if (command == 1) {
+                    int damage;
+
+                    System.out.println("勇者はスライムを攻撃した！");
+                    Thread.sleep(1500);
+
+                    if (random.nextInt(4) == 0) {
+                        damage = 20;
+                        System.out.println("会心の一撃！");
+                        Thread.sleep(1500);
+
+                    } else {
+                        damage = random.nextInt(8, 16);
+                    }
+                    if (enhanced) {
+                            damage = (int) Math.round(damage * 1.5);
+                    }
+
+
+                    enemyHp = Math.max(0, enemyHp - damage);
+
+                    System.out.println("スライムに" + damage + "ダメージ！");
+                    Thread.sleep(1500);
+                    System.out.println("スライム HP:" + enemyHp);
+                    Thread.sleep(1500);
+
+                    commandSelected = true;
+
+                } else if (command == 2) {
+                    System.out.println("勇者は逃げ出した！");
+                    Thread.sleep(1500);
+
+                    if (random.nextInt(2) == 0) {
+                        escaped = true;
+
+                        System.out.println("勇者は逃げ切った！");
+                        Thread.sleep(1500);
+
+                        commandSelected = true;
+
+                    } else {
+                        System.out.println("しかし、逃げられなかった！");
+                        Thread.sleep(1500);
+
+                        commandSelected = true;
+                    }
+
+                } else if (command == 3) {
+                    System.out.println("魔法を選択してください");
+                    System.out.println("1.ファイヤー　MP10");
+                    System.out.println("2.身体強化   MP10");
+                    System.out.println("3.戻る");
+
+                    int magicCommand = scanner.nextInt();
+
+                    if (magicCommand == 1) {
+                        if (playerMp >= 10) {
+                            playerMp = playerMp - 10;
+
+                            System.out.println("勇者はファイヤーを唱えた！");
+                            Thread.sleep(1500);
+
+                            int damage = random.nextInt(20, 26);
+                            enemyHp = Math.max(0, enemyHp - damage);
+
+                            System.out.println("スライムに" + damage + "ダメージ！");
+                            Thread.sleep(1500);
+
+                            System.out.println("勇者MP:" + playerMp);
+                            Thread.sleep(1500);
+
+                            commandSelected = true;
+
+                        } else {
+                            System.out.println("MPが足りないッ！");
+                            Thread.sleep(1500);
+                        }
+                    } else if (magicCommand == 2) {
+                        if (playerMp >= 10 && !enhanced) {
+                            playerMp = playerMp - 10;
+                            enhanced = true;
+                            enhanceTurns = 4;
+                            System.out.println("勇者は身体強化を使った！");
+                            Thread.sleep(1500);
+                            System.out.println("3ターンの間、通常攻撃のダメージが1.5倍になる！");
+                            Thread.sleep(1500);
+
+                            commandSelected = true;
+
+                        } else if (enhanced) {
+                            System.out.println("すでに身体強化がかかっているッ！");
+                            Thread.sleep(1500);
+                        } else {
+                            System.out.println("MPが足りないッ！");
+                            Thread.sleep(1500);
+                        }
+                    } else if (magicCommand == 3) {
+                        continue;
+                    }
+
+                } else if (command == 4) {
+                    System.out.println("勇者は腹踊りをした！");
+                    Thread.sleep(1500);
+
+                    if (random.nextInt(5) == 0) {
+                        enemyHp = Math.max(0, enemyHp - 9999);
+
+                        System.out.println("スライムは腹を抱えて笑った！");
+                        Thread.sleep(1500);
+                        System.out.println("スライムに9999ダメージ！");
+                        Thread.sleep(1500);
+                    } else {
+                        System.out.println("しかし、何も起こらなかった！");
+                        Thread.sleep(1500);
+                    }
+
+                    commandSelected = true;
+
+                } else if (command == 5) {
+                    System.out.print("勇者は身を固めた！");
+                    Thread.sleep(1500);
+
+                    defending = true;
+                    commandSelected = true;
+
+                } else if (command == 6) {
+                    System.out.println("アイテムを選択してください");
+                     if (herbCount > 0) {
+                         System.out.println("1.薬草 ✕ " + herbCount);
+                         System.out.println("2.戻る");
+                     } else {
+                         System.out.println("1.戻る");
+                     }
+
+                      int itemCommand = scanner.nextInt();
+
+                      if (herbCount > 0 && itemCommand == 1 ) {
+                          int beforeHp = playerHp;
+
+                          playerHp = Math.min(100,playerHp + 10);
+                          herbCount--;
+
+                          int healedHp = playerHp - beforeHp;
+
+                           System.out.println("勇者は薬草を使った！");
+                           Thread.sleep(1500);
+
+                           System.out.println("勇者のHPが" + healedHp + "回復した！");
+                           Thread.sleep(1500);
+
+                           System.out.println("勇者 HP:" + playerHp);
+                           Thread.sleep(1500);
+
+                           commandSelected = true;
+
+                      } else if (herbCount > 0 && itemCommand == 2) {
+                          continue;
+
+                      } else if (herbCount == 0 && itemCommand == 1) {
+                          continue;
+                      }
+                }
+            }
+                // スライムの処理
+                if (!escaped && enemyHp > 0) {
+
+                    ArrayList<Integer> actions = new ArrayList<>();
+                    actions.add(1); //攻撃
+                    actions.add(2); //蓄える
+                    
+                    if (enemyHp <= 40) {
+                        actions.add(3); //雑草を食べる
+                    }
+                    
+                    int slimeAction = actions.get(random.nextInt(actions.size()));
+
+                    if (slimeAction < 6 || charged) {
+                        int damage = random.nextInt(5, 11);
+
+                        if (defending) {
+                            damage = (int) Math.round(damage * 0.5);
+                        }
+                        if (charged) {
+                            damage = damage * 2;
+                            charged = false;
+                        }
+
+                        playerHp = Math.max(0, playerHp - damage);
+
+                        System.out.println("スライムの攻撃！");
+                        Thread.sleep(1500);
+                        System.out.println("勇者に" + damage + "ダメージ！");
+                        Thread.sleep(1500);
+                        System.out.println("勇者 Hp:" + playerHp);
+                        Thread.sleep(1500);
+
+                    } else if (slimeAction < 8) {
+                        System.out.println("スライムは力を蓄えている..!");
+                        Thread.sleep(1500);
+
+                        charged = true;
+                        
+                    } else {
+                        
+                        if (enemyHp < 50) {
+                            int beforeHp = enemyHp;
+                            enemyHp = Math.min(50,enemyHp + 10);
+                            int healedHp = enemyHp - beforeHp;
+                            
+                            System.out.println("スライムは雑草を食べた！");
+                            Thread.sleep(1500);
+                            System.out.println("スライムのHPが" + healedHp + "回復した！");
+                            Thread.sleep(1500);
+                            System.out.println("スライム HP:" + enemyHp);
+                            Thread.sleep(1500);
+                                    
+                        } else {
+                            
+                        }
+                        
+                    }
+
+                    defending = false;
+                }
+
+
+
+                //身体強化のターン処理
+                if (enhanced) {
+                    enhanceTurns--;
+
+                    if (enhanceTurns <= 0) {
+                        enhanced = false;
+                        System.out.println("身体強化の効果が切れた！");
+                        Thread.sleep(1500);
+                    }
+                }
+
+            }
+            if (escaped) {
+                System.out.println("戦闘を終了した！");
+            } else if (enemyHp <= 0 && playerHp > 0) {
+                System.out.println("スライムを倒した！");
+                Thread.sleep(1500);
+                System.out.println("勝利！");
+            } else if (playerHp <= 0) {
+                System.out.println("勇者は力尽きた...");
+                Thread.sleep(1500);
+                System.out.println("ゲームオーバー！");
+
+            }
+        }
+    }
